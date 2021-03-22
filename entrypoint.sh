@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 # Register agent if client.keys is empty
 if [ ! -s /var/ossec/etc/client.keys ]; then
   groups=${JOIN_GROUPS:-default}
@@ -7,9 +8,10 @@ if [ ! -s /var/ossec/etc/client.keys ]; then
   if [ ! -z ${JOIN_PASSWORD} ]; then
     password="-P ${JOIN_PASSWORD}"
   fi
-  manager=${JOIN_MANAGER:-172.17.0.1}
-  /var/ossec/bin/agent-auth -m $manager -G $groups $password
+  /var/ossec/bin/agent-auth -m $OSSEC_MANAGER_HOST -G $groups $password
 fi
+
+sed -i "s/\(<address>\)[^<]*\(<\/address>\)/\1$OSSEC_MANAGER_HOST\2/" ossec.conf
 
 # Start the agent
 /var/ossec/bin/ossec-control start
