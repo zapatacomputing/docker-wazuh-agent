@@ -11,10 +11,6 @@ if [ ! -s /var/ossec/etc/client.keys ]; then
   /var/ossec/bin/agent-auth -m $OSSEC_MANAGER_HOST -G $groups $password
 fi
 
-echo "config start"
-cat /var/ossec/etc/ossec.conf
-echo "config end"
-
 sed -i "s/\(<address>\)[^<]*\(<\/address>\)/\1$OSSEC_MANAGER_HOST\2/" /var/ossec/etc/ossec.conf
 chown root:ossec /var/ossec/etc/ossec.conf
 
@@ -24,10 +20,6 @@ status=$?
 if [ $status -ne 0 ]; then
   echo "Failed to start agent: $status : printing logs start"
   cat /var/ossec/logs/*
-  echo "config start"
-  cat /var/ossec/etc/ossec.conf
-  echo "config end"
-  ls -la /var/ossec/etc/
   echo "Failed to start agent: $status : printing logs end"
   exit $status
 fi
